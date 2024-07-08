@@ -79,6 +79,7 @@ size_t RandomTest::getRandomCodeSelected()
 
 std::string RandomTest::getIns(size_t opCode)
 {
+    //List of instruction
     std::string instruction[32] = {"iadd", "fadd", "isub", "fsub",
                                    "imul", "fmul", "idiv", "fdiv",
                                    "irem", "ineg", "fneg", "iand",
@@ -89,9 +90,11 @@ std::string RandomTest::getIns(size_t opCode)
                                    "i2f", "f2i", "top", "val"};
     std::string ans = instruction[opCode];
 #if CUSTOM_NUM == 1
+    //Custom distribution range
     std::uniform_int_distribution<int> dist_i(INT_LB, INT_HB);
     std::uniform_int_distribution<int> dist_f(FLOAT_LB, FLOAT_HB);
 #else
+    //Default distribution range
     std::uniform_int_distribution<size_t> dist(0, 10000);
     std::uniform_int_distribution<size_t> sign(0, 1);
 #endif
@@ -127,6 +130,7 @@ std::string RandomTest::getIns(size_t opCode)
         if(idx >= 0){
             ans += ' ' + std::to_string(idx*2);
         }else{
+            //If no integer in array, use val instead
             return getIns(31);
         }
         break;
@@ -137,6 +141,7 @@ std::string RandomTest::getIns(size_t opCode)
         if(idx >= 0){
             ans += ' ' + std::to_string(idx*2);
         }else{
+            //If no float in array, use val instead
             return getIns(31);
         }
         break;
@@ -153,6 +158,7 @@ std::string RandomTest::getIns(size_t opCode)
         if(idx >=0 ){
             ans += ' ' + std::to_string(idx * 2);
         }else{
+            //If no element in array, use top instead
             return getIns(30);
         }
         
@@ -318,6 +324,7 @@ int RandomTest::MyStack::top2(int *first, int *second)
 
 int RandomTest::MyArray::getRandomIntIdx()
 {
+    // Create a pool of integer's index
     std::vector<size_t> pool;
     for(size_t i = 0; i < len; i++){
         if(arr[i] == 0){
@@ -327,12 +334,15 @@ int RandomTest::MyArray::getRandomIntIdx()
     if(pool.size() == 0){
         return -1;
     }
+    // Choose a random number in the pool,
+    // by returning values from a random index of pool 
     std::uniform_int_distribution<int> dist(0, int(pool.size() - 1));
     return (int)pool[(size_t)dist(rt->gen)];
 }
 
 int RandomTest::MyArray::getRandomFloatIdx()
 {
+    // Create a pool of integer's index
     std::vector<size_t> pool;
     for(size_t i = 0; i < len; i++){
         if(arr[i] == 1){
@@ -342,6 +352,8 @@ int RandomTest::MyArray::getRandomFloatIdx()
     if(pool.size() == 0){
         return -1;
     }
+    // Choose a random number in the pool,
+    // by returning values from a random index of pool 
     std::uniform_int_distribution<int> dist(0, int(pool.size() - 1));
     return (int)pool[(size_t)dist(rt->gen)];
 }

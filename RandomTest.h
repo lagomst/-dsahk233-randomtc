@@ -7,7 +7,7 @@
 #include "option.h"
 
 class RandomTest{
-    std::mt19937 gen;
+    std::mt19937 gen; // Merriam Twister RNG
 
     class MyStack{
         std::vector<int> stack;    // Stack represented by array, num of elements kept track by len
@@ -18,12 +18,14 @@ class RandomTest{
             for(size_t i=0; i < m; i++)
                 stack.push_back(-1);
         }
-
+        
         int push(int);
         int pop();
 
+        // Get the top element in stack
         int top();
 
+        //Change first and second value to the top 2 elements of stack
         int top2(int *first, int *second);
 
         bool isEmpty(){return len==0;};
@@ -49,9 +51,19 @@ class RandomTest{
                 arr.push_back(-1);
             }
         }
+        // Get a random index of an integer from array.
+        // Return -1 if array has not stored an int.
         int getRandomIntIdx();
+
+        // Get a random index of an float from array.
+        // Return -1 if array has not stored a float.
         int getRandomFloatIdx();
+
+        // Get a random index in array.
+        // Return -1 if array has not stored any value.
         int getRandomIdx();
+
+        // Store new value to array
         int addNewVar(int);
     };
 
@@ -68,6 +80,7 @@ class RandomTest{
     void updateCode(size_t ins_code);
 public:
     RandomTest(size_t smax, size_t vmax): ms(smax), ma(this, vmax){
+        //Get time-based seed and seed the generator
         long long int seed = std::chrono::system_clock::now().time_since_epoch().count();
         gen = std::mt19937(seed);
     }
