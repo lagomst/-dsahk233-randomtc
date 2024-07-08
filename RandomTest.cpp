@@ -4,15 +4,15 @@ size_t RandomTest::getRandomCodeSelected()
 {
     std::vector<std::vector<size_t>> insReqTwo = {{0, 2, 4, 6, 8, 11, 12, 13, 15, 17, 19}, {1, 3, 5, 7, 14, 16, 18, 20}};
     std::vector<size_t> numpool;
-    
-    if (ms.len >= 1)
+
+    if (ms.getLen() >= 1)
     { // Stack has at least one elements
         if (ms.top() == 1)
-        {// add instruction requiring one int
+        { // add instruction requiring one float
             numpool.push_back(10);
         }
         if (ms.top() == 0)
-        {// add instruction requiring one float
+        { // add instruction requiring one int
             numpool.push_back(9);
             numpool.push_back(21);
         }
@@ -29,32 +29,32 @@ size_t RandomTest::getRandomCodeSelected()
             // fstore ins
             numpool.push_back(27);
         }
-        if (ma.len > 0 && (size_t)ma.len <= ms.max)
+        if (ma.len > 0)
         {
             // val ins
             numpool.push_back(31);
         }
 #endif
     }
-    
-    if (ms.len >= 2)
+
+    if (ms.getLen() >= 2)
     { // Stack has at least two elements
-        //Add instruction requiring 2 floats
+        // Add instruction requiring 2 floats
         numpool.insert(numpool.end(), insReqTwo[1].begin(), insReqTwo[1].end());
         int i = -1, j = -1;
         ms.top2(&i, &j);
         if (i == 0 && j == 0)
         { // 2 top elements are of int type
-            //Add instruction requiring 2 floats
+            // Add instruction requiring 2 floats
             numpool.insert(numpool.end(), insReqTwo[0].begin(), insReqTwo[0].end());
         }
     }
-    if (ms.len + 1 < ms.max)
+    if (ms.getLen() + 1 < ms.getMax())
     { // Stack isnt full yet
 #if USE_LOCALARR == 1
-        if (ma.len > 0 && (size_t)ma.len < ms.max)
-        {// array has at least one variable and not full yet
-            // iload, fload 
+        if (ma.len > 0 && (size_t)ma.len < ma.arr_max)
+        { // array has at least one variable and not full yet
+            // iload, fload
             numpool.push_back(24);
             numpool.push_back(25);
         }
@@ -67,19 +67,17 @@ size_t RandomTest::getRandomCodeSelected()
     { // i2f
         numpool.push_back(28);
     }
-    else
-    { // f2i
-        if (ms.top() == 1)
-            numpool.push_back(29);
-    }
-    //Get a random number from pool and return its value
+    if (ms.top() == 1)
+        // f2i
+        numpool.push_back(29);
+    // Get a random number from pool and return its value
     std::uniform_int_distribution<int> dist(0, int(numpool.size() - 1));
     return numpool[(size_t)dist(this->gen)];
 }
 
 std::string RandomTest::getIns(size_t opCode)
 {
-    //List of instruction
+    // List of instruction
     std::string instruction[32] = {"iadd", "fadd", "isub", "fsub",
                                    "imul", "fmul", "idiv", "fdiv",
                                    "irem", "ineg", "fneg", "iand",
@@ -90,11 +88,11 @@ std::string RandomTest::getIns(size_t opCode)
                                    "i2f", "f2i", "top", "val"};
     std::string ans = instruction[opCode];
 #if CUSTOM_NUM == 1
-    //Custom distribution range
+    // Custom distribution range
     std::uniform_int_distribution<int> dist_i(INT_LB, INT_HB);
     std::uniform_int_distribution<int> dist_f(FLOAT_LB, FLOAT_HB);
 #else
-    //Default distribution range
+    // Default distribution range
     std::uniform_int_distribution<size_t> dist(0, 10000);
     std::uniform_int_distribution<size_t> sign(0, 1);
 #endif
@@ -127,10 +125,13 @@ std::string RandomTest::getIns(size_t opCode)
     case 24:
     { // iload
         int idx = ma.getRandomIntIdx();
-        if(idx >= 0){
-            ans += ' ' + std::to_string(idx*2);
-        }else{
-            //If no integer in array, use val instead
+        if (idx >= 0)
+        {
+            ans += ' ' + std::to_string(idx * 2);
+        }
+        else
+        {
+            // If no integer in array, use val instead
             return getIns(31);
         }
         break;
@@ -138,10 +139,13 @@ std::string RandomTest::getIns(size_t opCode)
     case 25:
     { // fload
         int idx = ma.getRandomFloatIdx();
-        if(idx >= 0){
-            ans += ' ' + std::to_string(idx*2);
-        }else{
-            //If no float in array, use val instead
+        if (idx >= 0)
+        {
+            ans += ' ' + std::to_string(idx * 2);
+        }
+        else
+        {
+            // If no float in array, use val instead
             return getIns(31);
         }
         break;
@@ -154,14 +158,16 @@ std::string RandomTest::getIns(size_t opCode)
     }
     case 31:
     {
-        int idx= ma.getRandomIdx();
-        if(idx >=0 ){
+        int idx = ma.getRandomIdx();
+        if (idx >= 0)
+        {
             ans += ' ' + std::to_string(idx * 2);
-        }else{
-            //If no element in array, use top instead
+        }
+        else
+        {
+            // If no element in array, use top instead
             return getIns(30);
         }
-        
     }
 #endif
     default:
@@ -182,10 +188,14 @@ void RandomTest::updateCode(size_t opCode)
     case 11:
     case 12:
     case 13:
+    case 14:
     case 15:
+    case 16:
     case 17:
+    case 18:
     case 19:
-    { // pop 2 int and add an int to stack
+    case 20:
+    { // pop 2 num and add an int to stack
         ms.pop();
         ms.pop();
         ms.push(0);
@@ -195,11 +205,7 @@ void RandomTest::updateCode(size_t opCode)
     case 3:
     case 5:
     case 7:
-    case 14:
-    case 16:
-    case 18:
-    case 20:
-    { // pop 2 float and add a float to stack
+    { // pop 2 num and add a float to stack
         ms.pop();
         ms.pop();
         ms.push(1);
@@ -274,7 +280,8 @@ std::string RandomTest::getRandomTC(size_t line)
     return ans;
 }
 
-void RandomTest::printFile(std::string filename, size_t line){
+void RandomTest::printFile(std::string filename, size_t line)
+{
     std::ofstream file(filename);
     std::string ans = getRandomTC(line);
     file << ans;
@@ -326,16 +333,19 @@ int RandomTest::MyArray::getRandomIntIdx()
 {
     // Create a pool of integer's index
     std::vector<size_t> pool;
-    for(size_t i = 0; i < len; i++){
-        if(arr[i] == 0){
+    for (size_t i = 0; i < len; i++)
+    {
+        if (arr[i] == 0)
+        {
             pool.push_back(i);
         }
     }
-    if(pool.size() == 0){
+    if (pool.size() == 0)
+    {
         return -1;
     }
     // Choose a random number in the pool,
-    // by returning values from a random index of pool 
+    // by returning values from a random index of pool
     std::uniform_int_distribution<int> dist(0, int(pool.size() - 1));
     return (int)pool[(size_t)dist(rt->gen)];
 }
@@ -344,23 +354,27 @@ int RandomTest::MyArray::getRandomFloatIdx()
 {
     // Create a pool of integer's index
     std::vector<size_t> pool;
-    for(size_t i = 0; i < len; i++){
-        if(arr[i] == 1){
+    for (size_t i = 0; i < len; i++)
+    {
+        if (arr[i] == 1)
+        {
             pool.push_back(i);
         }
     }
-    if(pool.size() == 0){
+    if (pool.size() == 0)
+    {
         return -1;
     }
     // Choose a random number in the pool,
-    // by returning values from a random index of pool 
+    // by returning values from a random index of pool
     std::uniform_int_distribution<int> dist(0, int(pool.size() - 1));
     return (int)pool[(size_t)dist(rt->gen)];
 }
 
 int RandomTest::MyArray::getRandomIdx()
 {
-    if(len == 0){
+    if (len == 0)
+    {
         return -1;
     }
     int max = int(len - 1);
@@ -370,7 +384,8 @@ int RandomTest::MyArray::getRandomIdx()
 
 int RandomTest::MyArray::addNewVar(int a)
 {
-    if(len >= arr_max){
+    if (len >= arr_max)
+    {
         return -1;
     }
     arr[len++] = a;
