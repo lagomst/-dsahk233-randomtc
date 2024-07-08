@@ -18,7 +18,7 @@ class RandomTest{
             for(size_t i=0; i < m; i++)
                 stack.push_back(-1);
         }
-        
+
         int push(int);
         int pop();
 
@@ -84,7 +84,6 @@ public:
         long long int seed = std::chrono::system_clock::now().time_since_epoch().count();
         gen = std::mt19937(seed);
     }
-
 
     //Generate a selected-randomized test case
     std::string getRandomTC(size_t);

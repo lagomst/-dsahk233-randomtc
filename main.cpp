@@ -1,5 +1,11 @@
 #include "RandomTest.cpp"
 #include <iostream>
+#if WINDOW_OS == 1
+        #include <windows.h>
+#else
+        #include<unistd.h>
+#endif
+#include <thread>
 
 int main()
 {  
@@ -12,6 +18,11 @@ int main()
         std::string filename = name + std::to_string(i) + format;
         RandomTest rt(stack_max, arr_max);
         rt.printFile(filename, line);
+#if WINDOW_OS == 1
+        Sleep(1000);
+#else
+        usleep(10000);
+#endif
     }
     return 0;
 }

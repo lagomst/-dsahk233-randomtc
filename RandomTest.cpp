@@ -182,10 +182,14 @@ void RandomTest::updateCode(size_t opCode)
     case 11:
     case 12:
     case 13:
+    case 14:
     case 15:
+    case 16:
     case 17:
+    case 18:
     case 19:
-    { // pop 2 int and add an int to stack
+    case 20:
+    { // pop 2 num and add an int to stack
         ms.pop();
         ms.pop();
         ms.push(0);
@@ -195,11 +199,7 @@ void RandomTest::updateCode(size_t opCode)
     case 3:
     case 5:
     case 7:
-    case 14:
-    case 16:
-    case 18:
-    case 20:
-    { // pop 2 float and add a float to stack
+    { // pop 2 num and add a float to stack
         ms.pop();
         ms.pop();
         ms.push(1);
