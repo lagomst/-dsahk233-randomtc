@@ -19,7 +19,6 @@
 
 // Weight of instructions (WoI) (not implemented yet)
 #define INS_WEIGHT 0
-#if INS_WEIGHT == 1
     #define RI_REQTWOINT 1 //  WoI popping two ints and pushing an int
     #define RI_REQONEINT 1 // WoI popping one int and pushing an int
     #define RF_REQTWOFL 1 // WoI popping two floats and pushing a float
@@ -29,4 +28,3 @@
     #define LOAD_INT 1 // WoI iload
     #define STORE_FLOAT 1 // WoI fstore
     #define LOAD_FLOAT 1 // WoI fload
-#endif

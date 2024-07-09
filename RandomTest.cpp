@@ -1,6 +1,5 @@
 #include "RandomTest.h"
 
-
 size_t RandomTest::getRandomCodeSelected()
 {
     std::vector<std::vector<size_t>> insReqTwo = {{0, 2, 4, 6, 8, 11, 12, 13, 15, 17, 19}, {1, 3, 5, 7, 14, 16, 18, 20}};
@@ -20,17 +19,20 @@ size_t RandomTest::getRandomCodeSelected()
             numpool.push_back(28);
         }
         // top ins
-        numpool.push_back(30);  
+        numpool.push_back(30);
 #if USE_LOCALARR == 1
-        if (myst.top() == 0)
-        {
-            // istore ins
-            numpool.push_back(26);
-        }
-        if (myst.top() == 1)
-        {
-            // fstore ins
-            numpool.push_back(27);
+        if (ma.len < ma.arr_max)
+        {// If array index are not out of bound yet
+            if (myst.top() == 0)
+            {
+                // istore ins
+                numpool.push_back(26);
+            }
+            if (myst.top() == 1)
+            {
+                // fstore ins
+                numpool.push_back(27);
+            }
         }
         if (ma.len > 0)
         {
@@ -177,11 +179,11 @@ void RandomTest::updateCode(size_t opCode)
 {
     switch (opCode)
     {
-    case 0: // iadd
-    case 2: // isub
-    case 4: // imul
-    case 6: // idiv
-    case 8: // irem
+    case 0:  // iadd
+    case 2:  // isub
+    case 4:  // imul
+    case 6:  // idiv
+    case 8:  // irem
     case 11: // iand
     case 12: // ior
     case 13: // ieq
@@ -192,7 +194,7 @@ void RandomTest::updateCode(size_t opCode)
     case 18: // flt
     case 19: // igt
     case 20: // fgt
-    { // pop 2 num and add an int to stack
+    {        // pop 2 num and add an int to stack
         myst.pop();
         myst.pop();
         myst.push(0);
@@ -202,56 +204,56 @@ void RandomTest::updateCode(size_t opCode)
     case 3: // fsub
     case 5: // fmul
     case 7: // fdiv
-    { // pop 2 num and add a float to stack
+    {       // pop 2 num and add a float to stack
         myst.pop();
         myst.pop();
         myst.push(1);
         break;
     }
-    case 9: // ineg
+    case 9:  // ineg
     case 21: // ibnot
     case 29: // f2i
-    { // pop 1 num and add an int to stack
+    {        // pop 1 num and add an int to stack
         myst.pop();
         myst.push(0);
         break;
     }
     case 10: // fneg
     case 28: // i2f
-    { // pop 1 num and add a float to stack
+    {        // pop 1 num and add a float to stack
         myst.pop();
         myst.push(1);
         break;
     }
     case 22: // iconst
-    { 
+    {
         myst.push(0);
         break;
     }
     case 23: // fconst
-    { 
+    {
         myst.push(1);
         break;
     }
 #if USE_LOCALARR == 1
     case 24: // iload
-    { 
+    {
         myst.push(0);
         break;
     }
     case 25: // fload
-    { 
+    {
         myst.push(1);
         break;
     }
     case 26: // istore
-    { 
+    {
         myst.pop();
         ma.addNewVar(0);
         break;
     }
     case 27: // fstore
-    { 
+    {
         myst.pop();
         ma.addNewVar(1);
         break;
