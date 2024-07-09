@@ -1,0 +1,31 @@
+iconst 7706
+top
+ibnot
+fconst -6.106000
+top
+fstore 0
+val 0
+fmul
+iconst 3153
+fconst 2.120000
+flt
+fgt
+i2f
+fstore 2
+val 2
+iconst 7289
+ineg
+ineg
+val 0
+ibnot
+ineq
+ibnot
+iand
+top
+val 2
+fload 0
+fload 0
+fdiv
+fgt
+ineg
+top
