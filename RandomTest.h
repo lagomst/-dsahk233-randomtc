@@ -70,7 +70,7 @@ class RandomTest{
         int addNewVar(int);
     };
 
-    MyStack ms;
+    MyStack myst;
     MyArray ma;
 
     //Get a random instruction code based on current stack and array
@@ -82,7 +82,7 @@ class RandomTest{
     //Update stack and array according to an instruction code
     void updateCode(size_t ins_code);
 public:
-    RandomTest(size_t smax, size_t vmax): ms(smax), ma(this, vmax){
+    RandomTest(size_t smax, size_t vmax): myst(smax), ma(this, vmax){
         //Get time-based seed and seed the generator
         long long int seed = std::chrono::system_clock::now().time_since_epoch().count();
         gen = std::mt19937(seed);

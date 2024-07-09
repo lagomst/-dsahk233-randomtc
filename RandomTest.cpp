@@ -1,30 +1,33 @@
 #include "RandomTest.h"
 
+
 size_t RandomTest::getRandomCodeSelected()
 {
     std::vector<std::vector<size_t>> insReqTwo = {{0, 2, 4, 6, 8, 11, 12, 13, 15, 17, 19}, {1, 3, 5, 7, 14, 16, 18, 20}};
     std::vector<size_t> numpool;
 
-    if (ms.getLen() >= 1)
+    if (myst.getLen() >= 1)
     { // Stack has at least one elements
-        if (ms.top() == 1)
+        if (myst.top() == 1)
         { // add instruction requiring one float
             numpool.push_back(10);
+            numpool.push_back(29);
         }
-        if (ms.top() == 0)
+        if (myst.top() == 0)
         { // add instruction requiring one int
             numpool.push_back(9);
             numpool.push_back(21);
+            numpool.push_back(28);
         }
         // top ins
-        numpool.push_back(30);
+        numpool.push_back(30);  
 #if USE_LOCALARR == 1
-        if (ms.top() == 0)
+        if (myst.top() == 0)
         {
             // istore ins
             numpool.push_back(26);
         }
-        if (ms.top() == 1)
+        if (myst.top() == 1)
         {
             // fstore ins
             numpool.push_back(27);
@@ -37,23 +40,23 @@ size_t RandomTest::getRandomCodeSelected()
 #endif
     }
 
-    if (ms.getLen() >= 2)
+    if (myst.getLen() >= 2)
     { // Stack has at least two elements
         // Add instruction requiring 2 floats
         numpool.insert(numpool.end(), insReqTwo[1].begin(), insReqTwo[1].end());
         int i = -1, j = -1;
-        ms.top2(&i, &j);
+        myst.top2(&i, &j);
         if (i == 0 && j == 0)
         { // 2 top elements are of int type
-            // Add instruction requiring 2 floats
+            // Add instruction requiring 2 ints
             numpool.insert(numpool.end(), insReqTwo[0].begin(), insReqTwo[0].end());
         }
     }
-    if (ms.getLen() + 1 < ms.getMax())
+    if (myst.getLen() + 1 < myst.getMax())
     { // Stack isnt full yet
 #if USE_LOCALARR == 1
-        if (ma.len > 0 && (size_t)ma.len < ma.arr_max)
-        { // array has at least one variable and not full yet
+        if (ma.len > 0)
+        { // array has at least one variable
             // iload, fload
             numpool.push_back(24);
             numpool.push_back(25);
@@ -63,13 +66,7 @@ size_t RandomTest::getRandomCodeSelected()
         numpool.push_back(22);
         numpool.push_back(23);
     }
-    if (ms.top() == 0)
-    { // i2f
-        numpool.push_back(28);
-    }
-    if (ms.top() == 1)
-        // f2i
-        numpool.push_back(29);
+
     // Get a random number from pool and return its value
     std::uniform_int_distribution<int> dist(0, int(numpool.size() - 1));
     return numpool[(size_t)dist(this->gen)];
@@ -77,7 +74,7 @@ size_t RandomTest::getRandomCodeSelected()
 
 std::string RandomTest::getIns(size_t opCode)
 {
-    // List of instruction
+    // List of instructions
     std::string instruction[32] = {"iadd", "fadd", "isub", "fsub",
                                    "imul", "fmul", "idiv", "fdiv",
                                    "irem", "ineg", "fneg", "iand",
@@ -180,82 +177,82 @@ void RandomTest::updateCode(size_t opCode)
 {
     switch (opCode)
     {
-    case 0:
-    case 2:
-    case 4:
-    case 6:
-    case 8:
-    case 11:
-    case 12:
-    case 13:
-    case 14:
-    case 15:
-    case 16:
-    case 17:
-    case 18:
-    case 19:
-    case 20:
+    case 0: // iadd
+    case 2: // isub
+    case 4: // imul
+    case 6: // idiv
+    case 8: // irem
+    case 11: // iand
+    case 12: // ior
+    case 13: // ieq
+    case 14: // feq
+    case 15: // ineq
+    case 16: // fneq
+    case 17: // ilt
+    case 18: // flt
+    case 19: // igt
+    case 20: // fgt
     { // pop 2 num and add an int to stack
-        ms.pop();
-        ms.pop();
-        ms.push(0);
+        myst.pop();
+        myst.pop();
+        myst.push(0);
         break;
     }
-    case 1:
-    case 3:
-    case 5:
-    case 7:
+    case 1: // fadd
+    case 3: // fsub
+    case 5: // fmul
+    case 7: // fdiv
     { // pop 2 num and add a float to stack
-        ms.pop();
-        ms.pop();
-        ms.push(1);
+        myst.pop();
+        myst.pop();
+        myst.push(1);
         break;
     }
-    case 9:
-    case 21:
-    case 29:
+    case 9: // ineg
+    case 21: // ibnot
+    case 29: // f2i
     { // pop 1 num and add an int to stack
-        ms.pop();
-        ms.push(0);
+        myst.pop();
+        myst.push(0);
         break;
     }
-    case 10:
-    case 28:
+    case 10: // fneg
+    case 28: // i2f
     { // pop 1 num and add a float to stack
-        ms.pop();
-        ms.push(1);
+        myst.pop();
+        myst.push(1);
         break;
     }
-    case 22:
-    { // iconst
-        ms.push(0);
+    case 22: // iconst
+    { 
+        myst.push(0);
         break;
     }
-    case 23:
-    { // fconst
-        ms.push(1);
+    case 23: // fconst
+    { 
+        myst.push(1);
         break;
     }
 #if USE_LOCALARR == 1
-    case 24:
-    { // iload
-        ms.push(0);
+    case 24: // iload
+    { 
+        myst.push(0);
         break;
     }
-    case 25:
-    { // fload
-        ms.push(1);
+    case 25: // fload
+    { 
+        myst.push(1);
         break;
     }
-    case 26:
-    { // istore
-        ms.pop();
+    case 26: // istore
+    { 
+        myst.pop();
         ma.addNewVar(0);
         break;
     }
-    case 27:
-    { // fstore
-        ms.pop();
+    case 27: // fstore
+    { 
+        myst.pop();
         ma.addNewVar(1);
         break;
     }

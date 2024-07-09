@@ -12,7 +12,7 @@ int main()
     const size_t stack_max = STACK_MAX;
     const size_t arr_max = ARR_MAX;
     const size_t line = LINE;
-    const std::string destination = "./";
+    const std::string destination = "./tc/";
     const std::string name = "rand_tc";
     const std::string format = ".txt";
     for(int i = 0; i < NUM_OF_FILE; i++){
