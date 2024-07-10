@@ -1,4 +1,4 @@
-# Randomize testcases for DSA HK233
+# Randomized testcases for DSA HK233
 A simple script generating testcases.
 
 Runing main.cpp will generate few textfiles. 
