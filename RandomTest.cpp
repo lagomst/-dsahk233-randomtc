@@ -2,9 +2,123 @@
 
 size_t RandomTest::getRandomCodeSelected()
 {
-    std::vector<std::vector<size_t>> insReqTwo = {{0, 2, 4, 6, 8, 11, 12, 13, 15, 17, 19}, {1, 3, 5, 7, 14, 16, 18, 20}};
     std::vector<size_t> numpool;
+#if INS_WEIGHT == 1
 
+    if (myst.getLen() >= 1)
+    { // Stack has at least one element
+        if (myst.top() == 0)
+        { // top element is an int
+            for (int i = 0; i < RI_REQONEINT; i++)
+            { 
+                numpool.push_back(9);  // ineg
+            }
+            for (int i = 0; i < RF_REQONEINT; i++)
+            { 
+                numpool.push_back(28); // i2f
+            }
+            for (int i = 0; i < BOOL_INT; i++)
+            {
+                numpool.push_back(21); // ibnot
+            }
+        }
+        if (myst.top() == 1)
+        { // top element is a float
+            for (int i = 0; i < RF_REQONEFL; i++)
+            { // add ins requiring one float and returning float
+                numpool.push_back(10);
+            }
+            for (int i = 0; i < RI_REQONEFL; i++)
+            { // add ins requiring one float and returning int
+                numpool.push_back(29); // f2i
+            }
+        }
+        for (int i = 0; i < VIEW_TOP; i++)
+        { // top
+            numpool.push_back(30);
+        }
+    }
+    if (myst.getLen() >= 2)
+    { // Stack has at least 2 elements
+        for (int i = 0; i < RF_REQTWOFL; i++)
+        { // add ins requiring two floats and returning float
+            std::vector<size_t> pool = {1, 3, 5, 7};
+            numpool.insert(numpool.end(), pool.begin(), pool.end());
+        }
+        for (int i = 0; i < BOOL_FLOAT; i++)
+        { // add ins requiring two floats and returning int
+            std::vector<size_t> pool = {14, 16, 18, 20};
+            numpool.insert(numpool.end(), pool.begin(), pool.end());
+        }
+        int a = -1, b = -1;
+        myst.top2(&a, &b);
+        if (a == 0 && b == 0)
+        { // add ins requiring two ints and returning int
+            for (int i = 0; i < RI_REQTWOINT; i++)
+            {
+                std::vector<size_t> pool = {0, 2, 4, 6, 8};
+                numpool.insert(numpool.end(), pool.begin(), pool.end());
+            }
+            for (size_t i = 0; i < BOOL_INT; i++)
+            {
+                /* code */
+                std::vector<size_t> pool = {11, 12, 13, 15, 17, 19};
+                numpool.insert(numpool.end(), pool.begin(), pool.end());
+            }
+            
+        }
+    }
+    if (myst.getLen() + 1 < myst.getMax())
+    { // Stack is not full yet
+        for (int i = 0; i < RI_NOREQ; i++)
+        { // iconst
+            numpool.push_back(22);
+        }
+        for (int i = 0; i < RF_NOREQ; i++)
+        { // iconst
+            numpool.push_back(23);
+        }
+    }
+#if USE_LOCALARR == 1
+
+    if (myst.getLen() >= 1)
+    {
+        if (ma.getRandomIntIdx() >= 0)
+        { // there exists an index storing an integer
+            for (int i = 0; i < LOAD_INT; i++)
+            { // iload
+                numpool.push_back(24);
+            }
+        }
+        if (ma.getRandomFloatIdx() >= 0)
+        { // there exists an index storing a float
+            for (int i = 0; i < LOAD_FLOAT; i++)
+            { // fload
+                numpool.push_back(25);
+            }
+        }
+        if (myst.top() == 0)
+        { // top element is int
+            for (int i = 0; i < STORE_INT; i++)
+            { // istore
+                numpool.push_back(26);
+            }
+        }
+        if (myst.top() == 1)
+        { // top element is float
+            for (int i = 0; i < STORE_FLOAT; i++)
+            { // fstore
+                numpool.push_back(27);
+            }
+        }
+        for (int i = 0; i < VIEW_VAL; i++)
+        { // val
+            numpool.push_back(31);
+        }
+    }
+#endif
+#else
+    std::vector<std::vector<size_t>> insReqTwo = {{0, 2, 4, 6, 8, 11, 12, 13, 15, 17, 19}, {1, 3, 5, 7, 14, 16, 18, 20}};
     if (myst.getLen() >= 1)
     { // Stack has at least one elements
         if (myst.top() == 1)
@@ -22,7 +136,7 @@ size_t RandomTest::getRandomCodeSelected()
         numpool.push_back(30);
 #if USE_LOCALARR == 1
         if (ma.len < ma.arr_max)
-        {// If array index are not out of bound yet
+        { // If array index are not out of bound yet
             if (myst.top() == 0)
             {
                 // istore ins
@@ -58,19 +172,19 @@ size_t RandomTest::getRandomCodeSelected()
     { // Stack isnt full yet
 #if USE_LOCALARR == 1
         if (ma.getRandomIntIdx() >= 0)
-        { // Exist an integer element
-            numpool.push_back(24); //iload
+        {                          // Exist an integer element
+            numpool.push_back(24); // iload
         }
         if (ma.getRandomFloatIdx() >= 0)
-        { // Exist a float element
-            numpool.push_back(25); //fload
+        {                          // Exist a float element
+            numpool.push_back(25); // fload
         }
 #endif
         // iconst, fconst
         numpool.push_back(22);
         numpool.push_back(23);
     }
-
+#endif
     // Get a random number from pool and return its value
     std::uniform_int_distribution<int> dist(0, int(numpool.size() - 1));
     return numpool[(size_t)dist(this->gen)];
