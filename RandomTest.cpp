@@ -58,11 +58,11 @@ size_t RandomTest::getRandomCodeSelected()
     { // Stack isnt full yet
 #if USE_LOCALARR == 1
         if (ma.getRandomIntIdx() >= 0)
-        {
+        { // Exist an integer element
             numpool.push_back(24); //iload
         }
         if (ma.getRandomFloatIdx() >= 0)
-        {
+        { // Exist a float element
             numpool.push_back(25); //fload
         }
 #endif
