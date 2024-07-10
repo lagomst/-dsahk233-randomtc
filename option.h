@@ -14,8 +14,8 @@
 //Constant
 #define STACK_MAX 5  // maximum num of elements in stack
 #define ARR_MAX 3 // maximum num of elements in array
-#define LINE 1000 // num of lines per file
-#define NUM_OF_FILE 2 // num of file generated
+#define LINE 30 // num of lines per file
+#define NUM_OF_FILE 5 // num of file generated
 
 // Weight of instructions (WoI) (beta)
 #define INS_WEIGHT 0
