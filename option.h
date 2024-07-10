@@ -12,8 +12,8 @@
 #define WINDOW_OS 0 // use window-related function
 
 //Constant
-#define STACK_MAX 12 // maximum num of elements in stack
-#define ARR_MAX 12 // maximum num of elements in array
+#define STACK_MAX 10  // maximum num of elements in stack
+#define ARR_MAX 3 // maximum num of elements in array
 #define LINE 30 // num of lines per file
 #define NUM_OF_FILE 5 // num of file generated
 

@@ -57,11 +57,13 @@ size_t RandomTest::getRandomCodeSelected()
     if (myst.getLen() + 1 < myst.getMax())
     { // Stack isnt full yet
 #if USE_LOCALARR == 1
-        if (ma.len > 0)
-        { // array has at least one variable
-            // iload, fload
-            numpool.push_back(24);
-            numpool.push_back(25);
+        if (ma.getRandomIntIdx() >= 0)
+        {
+            numpool.push_back(24); //iload
+        }
+        if (ma.getRandomFloatIdx() >= 0)
+        {
+            numpool.push_back(25); //fload
         }
 #endif
         // iconst, fconst
