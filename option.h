@@ -12,13 +12,13 @@
 #define WINDOW_OS 0 // use window-related function
 
 //Constant
-#define STACK_MAX 5  // maximum num of elements in stack
+#define STACK_MAX 3  // maximum num of elements in stack
 #define ARR_MAX 3 // maximum num of elements in array
-#define LINE 30 // num of lines per file
-#define NUM_OF_FILE 5 // num of file generated
+#define LINE 1500 // num of lines per file
+#define NUM_OF_FILE 3 // num of file generated
 
 // Weight of instructions (WoI) (beta)
-#define INS_WEIGHT 0
+#define INS_WEIGHT 1
 #if INS_WEIGHT == 1
     #define RI_REQTWOINT 3 //  WoI popping two ints and pushing an int
     #define RI_REQONEINT 1 // WoI popping one int and pushing an int
@@ -27,8 +27,8 @@
     #define RF_REQONEFL 1 // WoI popping one float and pushing a float
     #define RF_REQONEINT 1 // WoI popping one int and returning one float
     #define BOOL_FLOAT 0 // WoI comparision float type
-    #define BOOL_INT 1 // WoI comparision int type
-    #define RI_NOREQ 2 // WoI pushing an int
+    #define BOOL_INT 0 // WoI comparision int type
+    #define RI_NOREQ 3 // WoI pushing an int
     #define RF_NOREQ 2 // WoI pushing a float
     #define VIEW_TOP 0 // WoI showing top of the stack
     #if USE_LOCALARR == 1

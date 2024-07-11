@@ -20,7 +20,7 @@ int main()
         RandomTest rt(stack_max, arr_max);
         rt.printFile(filename, line);
 #if WINDOW_OS == 1
-        Sleep(1000);
+        Sleep(100);
 #else
         usleep(10000);
 #endif

@@ -4,17 +4,16 @@ size_t RandomTest::getRandomCodeSelected()
 {
     std::vector<size_t> numpool;
 #if INS_WEIGHT == 1
-
     if (myst.getLen() >= 1)
     { // Stack has at least one element
         if (myst.top() == 0)
         { // top element is an int
             for (int i = 0; i < RI_REQONEINT; i++)
-            { 
-                numpool.push_back(9);  // ineg
+            {
+                numpool.push_back(9); // ineg
             }
             for (int i = 0; i < RF_REQONEINT; i++)
-            { 
+            {
                 numpool.push_back(28); // i2f
             }
             for (int i = 0; i < BOOL_INT; i++)
@@ -29,7 +28,7 @@ size_t RandomTest::getRandomCodeSelected()
                 numpool.push_back(10);
             }
             for (int i = 0; i < RI_REQONEFL; i++)
-            { // add ins requiring one float and returning int
+            {                          // add ins requiring one float and returning int
                 numpool.push_back(29); // f2i
             }
         }
@@ -65,10 +64,9 @@ size_t RandomTest::getRandomCodeSelected()
                 std::vector<size_t> pool = {11, 12, 13, 15, 17, 19};
                 numpool.insert(numpool.end(), pool.begin(), pool.end());
             }
-            
         }
     }
-    if (myst.getLen() + 1 < myst.getMax())
+    if (!myst.isFull())
     { // Stack is not full yet
         for (int i = 0; i < RI_NOREQ; i++)
         { // iconst
@@ -80,23 +78,15 @@ size_t RandomTest::getRandomCodeSelected()
         }
     }
 #if USE_LOCALARR == 1
-
-    if (myst.getLen() >= 1)
-    {
-        if (ma.getRandomIntIdx() >= 0)
-        { // there exists an index storing an integer
-            for (int i = 0; i < LOAD_INT; i++)
-            { // iload
-                numpool.push_back(24);
-            }
+    if (ma.len >= 0)
+    { // Array is indexable
+        for (int i = 0; i < VIEW_VAL; i++)
+        { // val
+            numpool.push_back(31);
         }
-        if (ma.getRandomFloatIdx() >= 0)
-        { // there exists an index storing a float
-            for (int i = 0; i < LOAD_FLOAT; i++)
-            { // fload
-                numpool.push_back(25);
-            }
-        }
+    }
+    if (ma.len < ma.arr_max && myst.getLen() > 0)
+    { // Array is storable and stack is not empty
         if (myst.top() == 0)
         { // top element is int
             for (int i = 0; i < STORE_INT; i++)
@@ -111,9 +101,22 @@ size_t RandomTest::getRandomCodeSelected()
                 numpool.push_back(27);
             }
         }
-        for (int i = 0; i < VIEW_VAL; i++)
-        { // val
-            numpool.push_back(31);
+    }
+    if (!myst.isFull())
+    { // Stack is not full yet
+        if (ma.getRandomIntIdx() >= 0)
+        { // there exists an index storing an integer
+            for (int i = 0; i < LOAD_INT; i++)
+            { // iload
+                numpool.push_back(24);
+            }
+        }
+        if (ma.getRandomFloatIdx() >= 0)
+        { // there exists an index storing a float
+            for (int i = 0; i < LOAD_FLOAT; i++)
+            { // fload
+                numpool.push_back(25);
+            }
         }
     }
 #endif
@@ -168,7 +171,7 @@ size_t RandomTest::getRandomCodeSelected()
             numpool.insert(numpool.end(), insReqTwo[0].begin(), insReqTwo[0].end());
         }
     }
-    if (myst.getLen() + 1 < myst.getMax())
+    if (!myst.isFull())
     { // Stack isnt full yet
 #if USE_LOCALARR == 1
         if (ma.getRandomIntIdx() >= 0)
