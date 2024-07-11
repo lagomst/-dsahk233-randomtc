@@ -1,3 +1,8 @@
+#define DEFAULT_OPTION 1 // use configuration in default_option.h
+#if DEFAULT_OPTION == 1
+    #include "default_option.h"
+#else
+
 #define USE_LOCALARR 1 //allow using array ins (istore, iload...)
 
 #define CUSTOM_NUM 1 //allow generating a custom range of number
@@ -38,4 +43,6 @@
         #define LOAD_FLOAT 1 // WoI fload
         #define VIEW_VAL 0 // WoI val
     #endif
+#endif
+
 #endif
