@@ -2,9 +2,20 @@
 #include <random>
 #include <fstream>
 #include <string>
+#include <algorithm>
 #include <chrono>
-
+#include <unordered_map>
 #include "option.h"
+
+class RandomTest;
+
+// std::string name_pool = {}
+
+struct Node
+{
+    const std::string name;
+    int type;
+};
 
 class RandomTest{
     std::mt19937 gen; // Merriam Twister RNG
@@ -39,6 +50,8 @@ class RandomTest{
 
         // If stack will be empty during popping two elements
         bool isEmptyWhilePopTwice(){return len-2 == 0;};
+
+        bool isTopTwoInt();
     };
 
     class MyArray{
@@ -70,19 +83,44 @@ class RandomTest{
         int addNewVar(int);
     };
 
+    class MyAVL
+    {
+        RandomTest *rt;
+        std::unordered_map<std::string, int> mp;
+        const size_t smax;
+        const size_t len_min;
+        const size_t len_max;
+    public:
+        MyAVL(RandomTest *ptr): rt(ptr), mp({}), smax(AVL_MAX), len_min(NAME_LEN_MIN), len_max(NAME_LEN_MAX){}
+
+        std::string createRandomName();
+        char getAlphabetChar(size_t offset);
+        void pushVar(std::string name, int type);
+
+        std::string getRandomIntVar();
+        std::string getRandomFloatVar();
+        std::string getRandomVar();
+
+        int getVarType(std::string name);
+
+        bool isEmpty(){return mp.size() == 0;};
+        bool isFull(){return mp.size() >= smax;}
+        bool existName(std::string name){return mp.count(name) != 0;}
+    };
+
     MyStack myst;
     MyArray ma;
-
+    MyAVL mavl;
     //Get a random instruction code based on current stack and array
     size_t getRandomCodeSelected();
 
-    //Get instruction string
-    std::string getIns(size_t ins_code);
+    std::string updateAndGetIns(size_t opCode);
 
-    //Update stack and array according to an instruction code
-    void updateCode(size_t ins_code);
+    std::vector<size_t> getLoadStorePool();
+    std::vector<size_t> getOperationPool();
+    void addInsToPool (std::vector<size_t> *pool, size_t ins, size_t n);
 public:
-    RandomTest(size_t smax, size_t vmax): myst(smax), ma(this, vmax){
+    RandomTest(size_t smax, size_t vmax): myst(smax), ma(this, vmax), mavl(this){
         //Get time-based seed and seed the generator
         long long int seed = std::chrono::system_clock::now().time_since_epoch().count();
         gen = std::mt19937(seed);
