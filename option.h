@@ -1,9 +1,15 @@
-#define DEFAULT_OPTION 1 // use configuration in default_option.h
+#define DEFAULT_OPTION 0 // use configuration in default_option.h
 #if DEFAULT_OPTION == 1
     #include "default_option.h"
 #else
 
-#define USE_LOCALARR 1 //allow using array ins (istore, iload...)
+/*
+    Determine what local variable space will be used
+    0: Not using any store or load ins
+    1: Use local array
+    2: Use local AVL tree
+*/
+#define USE_SPACE 2 
 
 #define CUSTOM_NUM 1 //allow generating a custom range of number
 #if CUSTOM_NUM == 1
@@ -17,32 +23,33 @@
 #define WINDOW_OS 0 // use window-related function
 
 //Constant
-#define STACK_MAX 3  // maximum num of elements in stack
-#define ARR_MAX 3 // maximum num of elements in array
-#define LINE 1500 // num of lines per file
+#define STACK_MAX 5  // maximum num of elements in stack
+#define ARR_MAX 10 // maximum num of elements in array
+#define LINE 100 // num of lines per file
 #define NUM_OF_FILE 3 // num of file generated
 
-// Weight of instructions (WoI) (beta)
-#define INS_WEIGHT 1
-#if INS_WEIGHT == 1
-    #define RI_REQTWOINT 3 //  WoI popping two ints and pushing an int
-    #define RI_REQONEINT 1 // WoI popping one int and pushing an int
-    #define RI_REQONEFL 1 // WoI popping one float and pushing an int
-    #define RF_REQTWOFL 2 // WoI popping two floats and pushing a float
-    #define RF_REQONEFL 1 // WoI popping one float and pushing a float
-    #define RF_REQONEINT 1 // WoI popping one int and returning one float
-    #define BOOL_FLOAT 0 // WoI comparision float type
-    #define BOOL_INT 0 // WoI comparision int type
-    #define RI_NOREQ 3 // WoI pushing an int
-    #define RF_NOREQ 2 // WoI pushing a float
-    #define VIEW_TOP 0 // WoI showing top of the stack
-    #if USE_LOCALARR == 1
-        #define STORE_INT 1 // WoI istore
-        #define LOAD_INT 1 // WoI iload
-        #define STORE_FLOAT 1 // WoI fstore
-        #define LOAD_FLOAT 1 // WoI fload
-        #define VIEW_VAL 0 // WoI val
-    #endif
-#endif
+#define AVL_MAX 10
+#define NAME_LEN_MIN 1
+#define NAME_LEN_MAX 3
 
+// Weight of instructions (WoI) (beta)
+#define RI_REQTWOINT 4 //  WoI popping two ints and pushing an int
+#define RI_REQONEINT 1 // WoI popping one int and pushing an int
+#define RI_REQONEFL 1 // WoI popping one float and pushing an int
+#define RF_REQTWOFL 2 // WoI popping two floats and pushing a float
+#define RF_REQONEFL 1 // WoI popping one float and pushing a float
+#define RF_REQONEINT 1 // WoI popping one int and returning one float
+#define BOOL_FLOAT 0 // WoI comparision float type
+#define BOOL_INT 1 // WoI comparision int type
+#define RI_NOREQ 3 // WoI pushing an int
+#define RF_NOREQ 2 // WoI pushing a float
+#define VIEW_TOP 0 // WoI showing top of the stack
+#if USE_SPACE >= 1
+    #define STORE_INT 2 // WoI istore
+    #define LOAD_INT 1 // WoI iload
+    #define STORE_FLOAT 2 // WoI fstore
+    #define LOAD_FLOAT 1 // WoI fload
+    #define VIEW_VAL 1 // WoI val
+    #define PAR_VAL 1 //WoI par
+#endif
 #endif
